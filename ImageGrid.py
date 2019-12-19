@@ -37,7 +37,4 @@ class ImageGrid(Grid):
         drawing.rectangle(
             (starting_x, starting_y, starting_x + self._cell_size, starting_y + self._cell_size),
             fill=color)
-
-x = ImageGrid(100, 100, 0.3)
-x.print_image()
-x.print()
+        
