@@ -20,9 +20,11 @@ class Grid:
             for i_column in range(self._height):
                 
                 if random() < self._obstacle_percentage:
-                    cur_row.append(1)  # current cell obstacle
+                    cur_if_obstacle = True
                 else:
-                    cur_row.append(0)  # current cell empty
+                    cur_if_obstacle = False
+                
+                cur_row.append(BasicCell(cur_if_obstacle))
             
             array.append(cur_row)
         
@@ -33,7 +35,7 @@ class Grid:
         for row in self.get_array():
             row_str = ""
             for cell in row:
-                if cell == 1:
+                if cell.get_if_obstacle():
                     row_str += "X"
                 else:
                     row_str += "-"
@@ -41,3 +43,14 @@ class Grid:
     
     def get_array(self):
         return self._array
+
+class BasicCell:
+
+    def __init__(self, if_obstacle):
+        self.set_if_obstacle(if_obstacle)
+
+    def set_if_obstacle(self, if_obstacle):
+        self._if_obstacle = if_obstacle
+    
+    def get_if_obstacle(self):
+        return self._if_obstacle
