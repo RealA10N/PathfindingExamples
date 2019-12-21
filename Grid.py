@@ -1,17 +1,19 @@
-from random import random
+import random
 
 class Grid:
 
-    def __init__(self, width, height, obstacle_percentage = 0.25):
+    def __init__(self, width, height, obstacle_percentage = 0.25, seed=random.random()):
         
         self._width = width
         self._height = height
         self._obstacle_percentage = obstacle_percentage
 
-        self._array = self._generate_grid_array()
+        self._array = self._generate_grid_array(seed)
     
-    def _generate_grid_array(self):
+    def _generate_grid_array(self, seed):
         
+        random.seed(seed)
+
         array = []
         
         for i_row in range(self._width):
@@ -19,7 +21,7 @@ class Grid:
             cur_row = []
             for i_column in range(self._height):
                 
-                if random() < self._obstacle_percentage:
+                if random.random() < self._obstacle_percentage:
                     cur_if_obstacle = True
                 else:
                     cur_if_obstacle = False
