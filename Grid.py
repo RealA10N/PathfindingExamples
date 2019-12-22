@@ -13,7 +13,6 @@ class Grid:
     def _generate_grid_array(self, seed):
         
         random.seed(seed)
-
         array = []
         
         for i_row in range(self._width):
@@ -21,11 +20,7 @@ class Grid:
             cur_row = []
             for i_column in range(self._height):
                 
-                if random.random() < self._obstacle_percentage:
-                    cur_if_obstacle = True
-                else:
-                    cur_if_obstacle = False
-                
+                cur_if_obstacle = random.random() < self._obstacle_percentage
                 cur_row.append(BasicCell(cur_if_obstacle))
             
             array.append(cur_row)
