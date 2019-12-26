@@ -5,14 +5,14 @@ from additionalFunctions import number_to_abc
 
 class ImageGrid(Grid):
 
-    def __init__(self, *args):
-        Grid.__init__(self, *args)
+    def __init__(self, *args, **kwargs):
+        Grid.__init__(self, *args, **kwargs)
 
         # style
         self._border_size = 10
         self._cell_size = 60
         self._ruler_size = 30    
-        self._color_palette = ("white", "black")
+        self._color_palette = {"bg": "white", "obstacle": "black"}
 
         # other
         self._rulers_base_image = None  # will be saved the first time generated
@@ -21,14 +21,14 @@ class ImageGrid(Grid):
 
     def _get_basic_image(self):
 
-        img = Image.new("RGB", self._generate_image_size(), self._color_palette[0])
+        img = Image.new("RGB", self._generate_image_size(), self._color_palette["bg"])
 
         drawing = ImageDraw.Draw(img)
 
         for row_i, row in enumerate(self.get_array()):
             for column_i, cell in enumerate(row):
                 if cell.get_if_obstacle():  # current cell obstacle
-                    self._draw_cell(drawing, (row_i, column_i), self._color_palette[1])
+                    self._draw_cell(drawing, (row_i, column_i), self._color_palette["obstacle"])
         return img
 
 
@@ -66,7 +66,7 @@ class ImageGrid(Grid):
             base_image_len = self._generate_image_size()[1]
 
         ruler_size = (base_image_len + self._ruler_size, self._ruler_size)
-        return Image.new("RGB", ruler_size, self._color_palette[1])
+        return Image.new("RGB", ruler_size, self._color_palette["obstacle"])
 
 
     def _get_horizontal_ruler(self):
@@ -82,7 +82,7 @@ class ImageGrid(Grid):
             cell_start_x = self._ruler_size + self._border_size + cur_cell * (self._cell_size + self._border_size)            
             text_starting_x = (self._cell_size / 2) - (text_size / 2) + cell_start_x
 
-            ruler_drawing.text((text_starting_x, 0), text, fill=self._color_palette[0], font=self._ruler_font)
+            ruler_drawing.text((text_starting_x, 0), text, fill=self._color_palette["bg"], font=self._ruler_font)
         
         return ruler_img
     
@@ -101,14 +101,14 @@ class ImageGrid(Grid):
             cell_start_x = cell_end_x - self._cell_size
             text_starting_x = (self._cell_size / 2) - (text_size / 2) + cell_start_x
 
-            ruler_drawing.text((text_starting_x, 0), text, fill=self._color_palette[0], font=self._ruler_font)
+            ruler_drawing.text((text_starting_x, 0), text, fill=self._color_palette["bg"], font=self._ruler_font)
         
         return ruler_img.rotate(90, expand=True)
     
 
     def _create_base_ruler_image(self):
         
-        img = Image.new("RGB", self._generate_image_size(rulers=True), self._color_palette[0])
+        img = Image.new("RGB", self._generate_image_size(rulers=True), self._color_palette["bg"])
         
         # paste rulers
         img.paste(self._get_horizontal_ruler())
