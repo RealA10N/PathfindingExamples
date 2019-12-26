@@ -11,6 +11,7 @@ class ImageGrid(Grid):
         # style
         self._border_size = 10
         self._cell_size = 60
+        self._marker_size = 40
         self._ruler_size = 30    
         self._color_palette = {"bg": "white", "obstacle": "black"}
 
@@ -18,6 +19,7 @@ class ImageGrid(Grid):
         self._basic_image = None  # will be saved the first time generated
         self._rulers_image = None  # will be saved the first time generated
         self._ruler_font = ImageFont.truetype("arial.ttf", int(self._ruler_size * 0.9))
+
 
     # - - - GENERATE BASIC IMAGE - - - #
 
@@ -45,6 +47,7 @@ class ImageGrid(Grid):
                 (starting_x, starting_y, starting_x + self._cell_size, starting_y + self._cell_size),
                 fill=self._color_palette["obstacle"])
     
+
     # - - - GENERATE RULERS IMAGE - - - #
 
     def _create_empty_ruler(self, is_horizontal):
@@ -108,6 +111,35 @@ class ImageGrid(Grid):
 
         self._rulers_image = img
     
+
+    # - - - GENETATE MARKER IMAGE - - - #
+
+    def _get_marker_image(self):
+        
+        img = Image.new("RGBA", self._generate_image_size(rulers=False), color=(0, 0, 0, 0))  # grid transperent image
+        drawing = ImageDraw.Draw(img)
+
+        for row in self.get_array():
+            for cell in row:
+                self._draw_cell_marker(drawing, cell)
+
+        return img
+
+    
+    def _draw_cell_marker(self, drawing, cell):
+
+        if cell.get_marker_color() is not None:
+
+            # calculate the position to start drawing the marker
+            # in a way that the marker will be in the middle of the cell
+            position_in_cell = int((self._cell_size / 2) - (self._marker_size / 2))
+
+            starting_x = self._border_size + cell.get_position()[0] * (self._border_size + self._cell_size) + position_in_cell
+            starting_y = self._border_size + cell.get_position()[1] * (self._border_size + self._cell_size) + position_in_cell
+        
+            drawing.rectangle((starting_x, starting_y, starting_x + self._marker_size, starting_y + self._marker_size), fill=cell.get_marker_color())
+
+
     # - - - GENERAL IMAGE METHODS - - - #
 
     def _get_image(self, rulers):
