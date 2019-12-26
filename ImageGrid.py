@@ -69,7 +69,7 @@ class ImageGrid(Grid):
             text_size = self._ruler_font.getsize(text)[0]
 
             cell_start_x = self._ruler_size + self._border_size + cur_cell * (self._cell_size + self._border_size)            
-            text_starting_x = (self._cell_size / 2) - (text_size / 2) + cell_start_x
+            text_starting_x = int((self._cell_size / 2) - (text_size / 2)) + cell_start_x
 
             ruler_drawing.text((text_starting_x, 0), text, fill=self._color_palette["bg"], font=self._ruler_font)
         
@@ -88,7 +88,7 @@ class ImageGrid(Grid):
 
             cell_end_x = self._generate_image_size(rulers=True)[1] - cur_cell * (self._cell_size + self._border_size) - self._ruler_size - self._border_size
             cell_start_x = cell_end_x - self._cell_size
-            text_starting_x = (self._cell_size / 2) - (text_size / 2) + cell_start_x
+            text_starting_x = int((self._cell_size / 2) - (text_size / 2)) + cell_start_x
 
             ruler_drawing.text((text_starting_x, 0), text, fill=self._color_palette["bg"], font=self._ruler_font)
         
