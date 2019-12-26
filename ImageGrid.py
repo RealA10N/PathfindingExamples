@@ -19,6 +19,7 @@ class ImageGrid(Grid):
         self._rulers_image = None  # will be saved the first time generated
         self._ruler_font = ImageFont.truetype("arial.ttf", int(self._ruler_size * 0.9))
 
+    # - - - GENERATE BASIC IMAGE - - - #
 
     def _generate_basic_image(self):
 
@@ -32,34 +33,6 @@ class ImageGrid(Grid):
                     self._draw_cell(drawing, (row_i, column_i), self._color_palette["obstacle"])
         
         self._basic_image = img
-
-    def _get_image(self, rulers):
-
-        if self._basic_image is None:
-            self._generate_basic_image()
-        
-        if rulers:
-            if self._rulers_image is None:
-                self._generate_ruler_image()
-            
-            return self._rulers_image
-        else:
-            return self._basic_image
-
-    def print_image(self, rulers=True):
-        self._get_image(rulers=rulers).show()
-
-    
-    def _generate_image_size(self, rulers=False):
-        
-        image_width = self._width * (self._cell_size + self._border_size) + self._border_size
-        image_height = self._height * (self._cell_size + self._border_size) + self._border_size
-
-        if rulers:
-            image_width += self._ruler_size
-            image_height += self._ruler_size
-
-        return (image_width, image_height)
     
 
     def _draw_cell(self, drawing, coords_tuple, color):
@@ -70,7 +43,8 @@ class ImageGrid(Grid):
         drawing.rectangle(
             (starting_x, starting_y, starting_x + self._cell_size, starting_y + self._cell_size),
             fill=color)
-
+    
+    # - - - GENERATE RULERS IMAGE - - - #
 
     def _create_empty_ruler(self, is_horizontal):
 
@@ -132,3 +106,37 @@ class ImageGrid(Grid):
         img.paste(self._basic_image, (self._ruler_size, self._ruler_size))
 
         self._rulers_image = img
+    
+    # - - - GENERAL IMAGE METHODS - - - #
+
+    def _get_image(self, rulers):
+
+        if self._basic_image is None:
+            self._generate_basic_image()
+        
+        if rulers:
+            if self._rulers_image is None:
+                self._generate_ruler_image()
+            
+            return self._rulers_image
+        else:
+            return self._basic_image
+
+
+    def print_image(self, rulers=True):
+        self._get_image(rulers=rulers).show()
+
+    
+    def _generate_image_size(self, rulers=False):
+        
+        image_width = self._width * (self._cell_size + self._border_size) + self._border_size
+        image_height = self._height * (self._cell_size + self._border_size) + self._border_size
+
+        if rulers:
+            image_width += self._ruler_size
+            image_height += self._ruler_size
+
+        return (image_width, image_height)
+    
+
+    
