@@ -47,12 +47,22 @@ class Grid:
 
 class BasicCell:
 
-    def __init__(self, if_obstacle, position):
+    def __init__(self, if_obstacle, position, marker_color=None):
         self._if_obstacle = if_obstacle
         self._position = position
+        self._marker_color = marker_color
     
     def get_if_obstacle(self):
         return self._if_obstacle
     
     def get_position(self):
         return self._position
+    
+    def get_marker_color(self):
+        return self._marker_color
+
+    def set_marker_color(self, color):
+        self._marker_color = color
+    
+    def remove_marker(self):
+        self._marker_color = None
