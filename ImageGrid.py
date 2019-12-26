@@ -15,11 +15,12 @@ class ImageGrid(Grid):
         self._color_palette = {"bg": "white", "obstacle": "black"}
 
         # other
-        self._rulers_base_image = None  # will be saved the first time generated
+        self._basic_image = None  # will be saved the first time generated
+        self._rulers_image = None  # will be saved the first time generated
         self._ruler_font = ImageFont.truetype("arial.ttf", int(self._ruler_size * 0.9))
 
 
-    def _get_basic_image(self):
+    def _generate_basic_image(self):
 
         img = Image.new("RGB", self._generate_image_size(), self._color_palette["bg"])
 
@@ -29,11 +30,22 @@ class ImageGrid(Grid):
             for column_i, cell in enumerate(row):
                 if cell.get_if_obstacle():  # current cell obstacle
                     self._draw_cell(drawing, (row_i, column_i), self._color_palette["obstacle"])
-        return img
+        
+        self._basic_image = img
 
 
-    def print_image(self):
-        self._get_basic_image().show()
+    def print_image(self, rulers=True):
+        
+        if self._basic_image is None:
+            self._generate_basic_image()
+        
+        if rulers:
+            if self._rulers_image is None:
+                self._generate_ruler_image()
+            
+            self._rulers_image.show()
+        else:
+            self._basic_image.show()
 
     
     def _generate_image_size(self, rulers=False):
@@ -106,7 +118,7 @@ class ImageGrid(Grid):
         return ruler_img.rotate(90, expand=True)
     
 
-    def _create_base_ruler_image(self):
+    def _generate_ruler_image(self):
         
         img = Image.new("RGB", self._generate_image_size(rulers=True), self._color_palette["bg"])
         
@@ -115,13 +127,6 @@ class ImageGrid(Grid):
         img.paste(self._get_vertical_ruler())
 
         # paste basic grid
-        img.paste(self._get_basic_image(), (self._ruler_size, self._ruler_size))
+        img.paste(self._basic_image, (self._ruler_size, self._ruler_size))
 
-        return img
-
-    def print_image_with_rulers(self):
-
-        if self._rulers_base_image is None:
-            self._rulers_base_image = self._create_base_ruler_image()
-
-        self._rulers_base_image.show()
+        self._rulers_image = img
