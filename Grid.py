@@ -21,7 +21,8 @@ class Grid:
             for i_column in range(self._width):
                 
                 cur_if_obstacle = random.random() < self._obstacle_percentage
-                cur_row.append(BasicCell(cur_if_obstacle))
+                cur_cell_position = (i_column, i_row)
+                cur_row.append(BasicCell(cur_if_obstacle, cur_cell_position))
             
             array.append(cur_row)
         
@@ -40,14 +41,18 @@ class Grid:
     
     def get_array(self):
         return self._array
+    
+    def get_cell(self, position):
+        return self.get_array()[position[1]][position[0]]
 
 class BasicCell:
 
-    def __init__(self, if_obstacle):
-        self.set_if_obstacle(if_obstacle)
-
-    def set_if_obstacle(self, if_obstacle):
+    def __init__(self, if_obstacle, position):
         self._if_obstacle = if_obstacle
+        self._position = position
     
     def get_if_obstacle(self):
         return self._if_obstacle
+    
+    def get_position(self):
+        return self._position
