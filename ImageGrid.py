@@ -33,9 +33,8 @@ class ImageGrid(Grid):
         
         self._basic_image = img
 
+    def _get_image(self, rulers):
 
-    def print_image(self, rulers=True):
-        
         if self._basic_image is None:
             self._generate_basic_image()
         
@@ -43,9 +42,12 @@ class ImageGrid(Grid):
             if self._rulers_image is None:
                 self._generate_ruler_image()
             
-            self._rulers_image.show()
+            return self._rulers_image
         else:
-            self._basic_image.show()
+            return self._basic_image
+
+    def print_image(self, rulers=True):
+        self._get_image(rulers=rulers).show()
 
     
     def _generate_image_size(self, rulers=False):
