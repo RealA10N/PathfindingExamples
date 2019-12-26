@@ -1,6 +1,7 @@
 from Grid import Grid
 from PIL import Image, ImageDraw, ImageFont
 from additionalFunctions import number_to_abc
+from copy import deepcopy
 
 
 class ImageGrid(Grid):
@@ -138,11 +139,26 @@ class ImageGrid(Grid):
             starting_y = self._border_size + cell.get_position()[1] * (self._border_size + self._cell_size) + position_in_cell
         
             drawing.rectangle((starting_x, starting_y, starting_x + self._marker_size, starting_y + self._marker_size), fill=cell.get_marker_color())
+    
+
+    def _add_markers_to_image(self, base_img):
+
+        marker_img = self._get_marker_image()
+
+        # we want to stick the marker image to the
+        # bottom right of the base_image.
+        marker_width, marker_height = marker_img.size
+        base_width, base_height = base_img.size
+
+        pasting_x = base_width - marker_width
+        pasting_y = base_height - marker_height
+
+        base_img.paste(marker_img, (pasting_x, pasting_y), marker_img)
 
 
     # - - - GENERAL IMAGE METHODS - - - #
 
-    def _get_image(self, rulers):
+    def _get_image(self, rulers, markers):
 
         if self._basic_image is None:
             self._generate_basic_image()
@@ -151,13 +167,18 @@ class ImageGrid(Grid):
             if self._rulers_image is None:
                 self._generate_ruler_image()
             
-            return self._rulers_image
+            img = deepcopy(self._rulers_image)
         else:
-            return self._basic_image
+            img = deepcopy(self._basic_image)
+        
+        if markers:
+            self._add_markers_to_image(img)
+        
+        return img
 
 
-    def print_image(self, rulers=True):
-        self._get_image(rulers=rulers).show()
+    def print_image(self, rulers=True, markers=True):
+        self._get_image(rulers=rulers, markers=markers).show()
 
     
     def _generate_image_size(self, rulers=False):
@@ -170,6 +191,3 @@ class ImageGrid(Grid):
             image_height += self._ruler_size
 
         return (image_width, image_height)
-    
-
-    
