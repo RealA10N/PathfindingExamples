@@ -30,7 +30,7 @@ class ImageGrid(Grid):
         for row_i, row in enumerate(self.get_array()):
             for column_i, cell in enumerate(row):
                 if cell.get_if_obstacle():  # current cell obstacle
-                    self._draw_cell(drawing, (row_i, column_i), self._color_palette["obstacle"])
+                    self._draw_cell(drawing, (column_i, row_i), self._color_palette["obstacle"])
         
         self._basic_image = img
     

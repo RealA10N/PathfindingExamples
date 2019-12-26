@@ -15,10 +15,10 @@ class Grid:
         random.seed(seed)
         array = []
         
-        for i_row in range(self._width):
+        for i_row in range(self._height):
             
             cur_row = []
-            for i_column in range(self._height):
+            for i_column in range(self._width):
                 
                 cur_if_obstacle = random.random() < self._obstacle_percentage
                 cur_row.append(BasicCell(cur_if_obstacle))
