@@ -2,7 +2,7 @@ import random
 
 class Grid:
 
-    def __init__(self, width, height, obstacle_percentage = 0.25, seed=random.random()):
+    def __init__(self, width, height, obstacle_percentage = 0.35, seed=random.random()):
         
         self._width = width
         self._height = height
