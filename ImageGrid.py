@@ -10,16 +10,13 @@ class ImageGrid(Grid):
         Grid.__init__(self, *args, **kwargs)
 
         # style
-        self._border_size = 10
-        self._cell_size = 60
-        self._marker_size = 40
-        self._ruler_size = 30    
+        self._size_palette = {"cell": 60, "border": 10, "marker": 40, "ruler": 30}
         self._color_palette = {"bg": "white", "obstacle": "black"}
 
         # other
         self._basic_image = None  # will be saved the first time generated
         self._rulers_image = None  # will be saved the first time generated
-        self._ruler_font = ImageFont.truetype("arial.ttf", int(self._ruler_size * 0.9))
+        self._ruler_font = ImageFont.truetype("arial.ttf", int(self._size_palette["ruler"] * 0.9))
 
 
     # - - - GENERATE BASIC IMAGE - - - #
@@ -40,12 +37,12 @@ class ImageGrid(Grid):
         
         if cell.get_if_obstacle():
 
-            starting_x = self._border_size + cell.get_position()[0] * (self._cell_size + self._border_size)
-            starting_y = self._border_size + cell.get_position()[1] * (self._cell_size + self._border_size)
+            starting_x = self._size_palette["border"] + cell.get_position()[0] * (self._size_palette["cell"] + self._size_palette["border"])
+            starting_y = self._size_palette["border"] + cell.get_position()[1] * (self._size_palette["cell"] + self._size_palette["border"])
 
             # drawing obstacle
             drawing.rectangle(
-                (starting_x, starting_y, starting_x + self._cell_size, starting_y + self._cell_size),
+                (starting_x, starting_y, starting_x + self._size_palette["cell"], starting_y + self._size_palette["cell"]),
                 fill=self._color_palette["obstacle"])
     
 
@@ -58,7 +55,7 @@ class ImageGrid(Grid):
         else:
             base_image_len = self._generate_image_size()[1]
 
-        ruler_size = (base_image_len + self._ruler_size, self._ruler_size)
+        ruler_size = (base_image_len + self._size_palette["ruler"], self._size_palette["ruler"])
         return Image.new("RGB", ruler_size, self._color_palette["obstacle"])
 
 
@@ -72,8 +69,8 @@ class ImageGrid(Grid):
             text = number_to_abc(cur_cell).upper()
             text_size = self._ruler_font.getsize(text)[0]
 
-            cell_start_x = self._ruler_size + self._border_size + cur_cell * (self._cell_size + self._border_size)            
-            text_starting_x = int((self._cell_size / 2) - (text_size / 2)) + cell_start_x
+            cell_start_x = self._size_palette["ruler"] + self._size_palette["border"] + cur_cell * (self._size_palette["cell"] + self._size_palette["border"])            
+            text_starting_x = int((self._size_palette["cell"] / 2) - (text_size / 2)) + cell_start_x
 
             ruler_drawing.text((text_starting_x, 0), text, fill=self._color_palette["bg"], font=self._ruler_font)
         
@@ -90,9 +87,9 @@ class ImageGrid(Grid):
             text = str(cur_cell)
             text_size = self._ruler_font.getsize(text)[0]
 
-            cell_end_x = self._generate_image_size(rulers=True)[1] - cur_cell * (self._cell_size + self._border_size) - self._ruler_size - self._border_size
-            cell_start_x = cell_end_x - self._cell_size
-            text_starting_x = int((self._cell_size / 2) - (text_size / 2)) + cell_start_x
+            cell_end_x = self._generate_image_size(rulers=True)[1] - cur_cell * (self._size_palette["cell"] + self._size_palette["border"]) - self._size_palette["ruler"] - self._size_palette["border"]
+            cell_start_x = cell_end_x - self._size_palette["cell"]
+            text_starting_x = int((self._size_palette["cell"] / 2) - (text_size / 2)) + cell_start_x
 
             ruler_drawing.text((text_starting_x, 0), text, fill=self._color_palette["bg"], font=self._ruler_font)
         
@@ -108,7 +105,7 @@ class ImageGrid(Grid):
         img.paste(self._get_vertical_ruler())
 
         # paste basic grid
-        img.paste(self._basic_image, (self._ruler_size, self._ruler_size))
+        img.paste(self._basic_image, (self._size_palette["ruler"], self._size_palette["ruler"]))
 
         self._rulers_image = img
     
@@ -133,12 +130,12 @@ class ImageGrid(Grid):
 
             # calculate the position to start drawing the marker
             # in a way that the marker will be in the middle of the cell
-            position_in_cell = int((self._cell_size / 2) - (self._marker_size / 2))
+            position_in_cell = int((self._size_palette["cell"] / 2) - (self._size_palette["marker"] / 2))
 
-            starting_x = self._border_size + cell.get_position()[0] * (self._border_size + self._cell_size) + position_in_cell
-            starting_y = self._border_size + cell.get_position()[1] * (self._border_size + self._cell_size) + position_in_cell
+            starting_x = self._size_palette["border"] + cell.get_position()[0] * (self._size_palette["border"] + self._size_palette["cell"]) + position_in_cell
+            starting_y = self._size_palette["border"] + cell.get_position()[1] * (self._size_palette["border"] + self._size_palette["cell"]) + position_in_cell
         
-            drawing.rectangle((starting_x, starting_y, starting_x + self._marker_size, starting_y + self._marker_size), fill=cell.get_marker_color())
+            drawing.rectangle((starting_x, starting_y, starting_x + self._size_palette["marker"], starting_y + self._size_palette["marker"]), fill=cell.get_marker_color())
     
 
     def _add_markers_to_image(self, base_img):
@@ -183,11 +180,11 @@ class ImageGrid(Grid):
     
     def _generate_image_size(self, rulers=False):
         
-        image_width = self._width * (self._cell_size + self._border_size) + self._border_size
-        image_height = self._height * (self._cell_size + self._border_size) + self._border_size
+        image_width = self._width * (self._size_palette["cell"] + self._size_palette["border"]) + self._size_palette["border"]
+        image_height = self._height * (self._size_palette["cell"] + self._size_palette["border"]) + self._size_palette["border"]
 
         if rulers:
-            image_width += self._ruler_size
-            image_height += self._ruler_size
+            image_width += self._size_palette["ruler"]
+            image_height += self._size_palette["ruler"]
 
         return (image_width, image_height)
