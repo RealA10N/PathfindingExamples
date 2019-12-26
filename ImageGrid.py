@@ -24,25 +24,26 @@ class ImageGrid(Grid):
     def _generate_basic_image(self):
 
         img = Image.new("RGB", self._generate_image_size(), self._color_palette["bg"])
-
         drawing = ImageDraw.Draw(img)
 
-        for row_i, row in enumerate(self.get_array()):
-            for column_i, cell in enumerate(row):
-                if cell.get_if_obstacle():  # current cell obstacle
-                    self._draw_cell(drawing, (column_i, row_i), self._color_palette["obstacle"])
+        for row in self.get_array():
+            for cell in row:
+                self._draw_cell(drawing, cell)
         
         self._basic_image = img
     
 
-    def _draw_cell(self, drawing, coords_tuple, color):
+    def _draw_cell(self, drawing, cell):
         
-        starting_x = self._border_size + coords_tuple[0] * (self._cell_size + self._border_size)
-        starting_y = self._border_size + coords_tuple[1] * (self._cell_size + self._border_size)
-        
-        drawing.rectangle(
-            (starting_x, starting_y, starting_x + self._cell_size, starting_y + self._cell_size),
-            fill=color)
+        if cell.get_if_obstacle():
+
+            starting_x = self._border_size + cell.get_position()[0] * (self._cell_size + self._border_size)
+            starting_y = self._border_size + cell.get_position()[1] * (self._cell_size + self._border_size)
+
+            # drawing obstacle
+            drawing.rectangle(
+                (starting_x, starting_y, starting_x + self._cell_size, starting_y + self._cell_size),
+                fill=self._color_palette["obstacle"])
     
     # - - - GENERATE RULERS IMAGE - - - #
 
