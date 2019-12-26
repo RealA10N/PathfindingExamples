@@ -1,5 +1,6 @@
 from Grid import Grid
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
+from additionalFunctions import number_to_abc
 
 
 class ImageGrid(Grid):
@@ -9,8 +10,8 @@ class ImageGrid(Grid):
     
     _color_palette = ("white", "black")
 
-    def print_image(self):
-        
+    def _get_basic_image(self):
+
         img = Image.new("RGB", self._generate_image_size(), self._color_palette[0])
 
         drawing = ImageDraw.Draw(img)
@@ -19,8 +20,11 @@ class ImageGrid(Grid):
             for column_i, cell in enumerate(row):
                 if cell.get_if_obstacle():  # current cell obstacle
                     self._draw_cell(drawing, (row_i, column_i), self._color_palette[1])
+        return img
 
-        img.show()
+    def print_image(self):
+        self._get_basic_image().show()
+
     
     def _generate_image_size(self):
         
