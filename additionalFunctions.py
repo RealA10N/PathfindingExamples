@@ -27,3 +27,23 @@ def number_to_abc(number):
         number = int((number - cur_chr_num) / 26) - 1
     
     return string
+
+def string_to_coords(string):
+
+    string = string.lower()
+    numbers = ''
+    abcs = ''
+
+    for char in string:
+        if char >= 'a' and char <= 'z':  # if letter
+            abcs += char
+        elif char >= '0' and char <= '9':  # if numbers
+            numbers += char
+    
+    if numbers == '' or abcs == '':
+        raise TypeError("String must contain numbers and letters.")
+    
+    numbers = int(numbers)
+    abcs = abc_to_number(abcs)
+
+    return (abcs, numbers)
